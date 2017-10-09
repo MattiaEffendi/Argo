@@ -25,7 +25,7 @@ A simple italian Telegram bot to see your grades, homeworks and everything else 
 
 - Visit https://api.telegram.org/botYOURTOKEN/setWebhook?url=https://yourserverip/ArgoBot/index.php
 
-- Send /start to your bot, it should work.
+- Send ```/start``` to your bot, it should work.
 
 ## License
 See ```LICENSE``` file.
