@@ -1,4 +1,4 @@
-# ArgoBot ![Bot](https://img.shields.io/badge/Telegram-%40PArgoBot-blue.svg) ![Portfolio](https://img.shields.io/badge/Portflio-%40MyPersonalPortfolio-green.svg) ![Status](https://img.shields.io/badge/Status-Developement-red.svg)
+# ArgoBot [![Bot](https://img.shields.io/badge/Telegram-%40PArgoBot-blue.svg)][Bot] [![Portfolio](https://img.shields.io/badge/Portflio-%40MyPersonalPortfolio-green.svg)][Portfolio] ![Status](https://img.shields.io/badge/Status-Developement-red.svg)
 A simple Telegram bot to see grades, homeworks and everything else of the Argo software.
 
 ## Features
@@ -32,3 +32,7 @@ See ```LICENSE``` file.
 
 ## Support
 Need help? Contact [me](https://t.me/iDoppioclick) on Telegram, i will help you setting up everything!
+
+<!-- URLS -->
+[Bot]: https://t.me/PArgoBot
+[Portfolio]: https://t.me/MyPersonalPortfolio
