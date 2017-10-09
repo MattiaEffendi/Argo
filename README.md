@@ -1,5 +1,5 @@
 # ArgoBot [![Bot](https://img.shields.io/badge/Telegram-%40PArgoBot-blue.svg)][Bot] [![Portfolio](https://img.shields.io/badge/Portflio-%40MyPersonalPortfolio-green.svg)][Portfolio] ![Status](https://img.shields.io/badge/Status-Developement-red.svg)
-A simple Telegram bot to see grades, homeworks and everything else of the Argo software.
+A simple italian Telegram bot to see your grades, homeworks and everything else of the Argo electronic school register software.
 
 ## Features
 - [ ] View **your grades** by the bot.
