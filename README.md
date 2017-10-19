@@ -1,16 +1,16 @@
 # ArgoBot [![Bot](https://img.shields.io/badge/Telegram-%40PArgoBot-blue.svg)][Bot] [![Portfolio](https://img.shields.io/badge/Portflio-%40MyPersonalPortfolio-green.svg)][Portfolio] ![Status](https://img.shields.io/badge/Status-Developement-red.svg)
-A simple italian Telegram bot to see your grades, homeworks and everything else of the Argo electronic school register software.
+A simple italian Telegram bot to see your grades, homework and everything else of the Argo electronic school register software.
 
 ## Features
 - [ ] View **your grades** by the bot.
 - [ ] View **your homeworks** by the bot.
 - [ ] View your **disciplinary notes** by the bot.
 - [ ] View the **resume** of the **today's journey**.
-- [ ] Get a notify if there's an **upcoming test** or everyting else.
+- [ ] Get a notify if there's an **upcoming test** or everything else.
 
 ## Installation
     
-- Install the dependencies, skip if you already have them.
+- Install the dependencies with your package manager (click [here](https://en.m.wikipedia.org/wiki/List_of_software_package_management_systems) for a list) , skip if you already have them.
 
       $ sudo apt-get install git
       $ sudo apt-get install php7.0 php7.0-curl apache2
