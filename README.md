@@ -34,6 +34,10 @@ See ```LICENSE``` file.
 ## Support
 Need help? Contact [me](https://t.me/iDoppioclick) on Telegram, i will help you setting up everything!
 
+## Acknowledgments
+[Cristian Livella](https://cristianlivella.com) for his fantastic ArgoAPI.
+[ale183](https://github.com/ale183) for his tips.
+
 <!-- URLS -->
 [Bot]: https://t.me/PArgoBot
 [Portfolio]: https://t.me/MyPersonalPortfolio
