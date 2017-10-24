@@ -2,6 +2,7 @@
 A simple italian Telegram bot to see your grades, homework and everything else of the Argo electronic school register software.
 
 ## Features
+- [x] Automatic **session saving**
 - [ ] View **your grades** by the bot.
 - [ ] View **your homeworks** by the bot.
 - [ ] View your **disciplinary notes** by the bot.
