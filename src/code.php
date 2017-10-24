@@ -16,6 +16,31 @@ function getStatus($userID){
     return $stato;
 }
 
+require_once 'argoapi.php';
+if($update){
+    $kbb[] = array(
+        array(
+            "text" => "\xf0\x9f\x94\x90 Effettua il login",
+            "callback_data" => "Login"
+        )
+    );
+    $q = $sql->prepare('SELECT * FROM Utenti WHERE ID = :id');
+    $q->execute(array(':id' => $userID));
+    $res = $q->fetch(PDO::FETCH_ASSOC);
+    if($res['LoggedIn'] == "Si") {
+        if ($res['AuthToken'] != "-") {
+            try {
+                $user = new argoUser($res['SchoolCode'], $res['Username'], $res['AuthToken'], 1);
+            }
+            catch (Exception $e) {
+                sm($chatID, "\xe2\x8f\xb0 <b>Sessione scaduta</b>\nLa tua sessione è scaduta, potrebbe essere per un errore nelle credenziali. Ri-effettua il login.", $kbb);
+            }
+
+        }
+    }
+}
+
+
 if($msg == "/start")
 {
     $kb[] = array(

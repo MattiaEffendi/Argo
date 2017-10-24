@@ -1,7 +1,7 @@
 <?php
 
 
-
+$version = "1.0";
 
 if(!file_exists('config.php')){
     echo "<b>Error</b>: you must generate a config.php file from the config.example.php file in order to use the bot!";
@@ -9,14 +9,41 @@ if(!file_exists('config.php')){
 }else {
     include "config.php";
 }
+?>
+<style>
+    .outer {
+        display: table;
+        position: absolute;
+        height: 90%;
+        width: 100%;
+    }
 
-$extensions = array('curl');
+    .middle {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .inner {
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        text-align: center;
+    }
+</style>
+<div class="middle">
+    <div class="inner">
+        <div class="outer">
+        <font face="Verdana"><b>ArgoBot <?php echo $version; ?> | by Doppio</b><br />Bot is working!<br />Code errors:<br /><br /></font>
+</div></div></div>
+<?php
+/*$extensions = array('curl');
 foreach($extensions as $extension){
     if(!extension_loaded($extension)) echo "<b>Error:</b> Install the php7.0-" . $extension . " extension to make the bot work.";
     exit;
-}
+}*/
 
-$api = "bot" . $apitoken;
+
+$api = "bot" . $API;
 
 
 
@@ -143,7 +170,7 @@ return false;
 }elseif($e403){
 return false;
 }else{
-return true;
+return $rr;
 }
 }
 }
