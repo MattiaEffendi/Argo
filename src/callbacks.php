@@ -110,7 +110,7 @@ if($msg) {
                 "callback_data" => "AnnullaLogin"
                 )
             );
-            if (preg_match('/SG[0-9][0-9][0-9][0-9][0-9]/is', $msg, $matches)) {
+            if (preg_match('/S(.*?)[0-9][0-9][0-9][0-9][0-9]/is', $msg, $matches)) {
                 sm($chatID, "\xf0\x9f\x91\xa4 <b>Inviami ora l'username di Argo.</b>\nQuesto è l'unico dato che verrà salvato nel database oltre al codice scuola.", $kb);
                 setPage($userID, 'SendUsername');
                 $q = $sql->prepare('UPDATE Utenti SET SchoolCode = :sc WHERE ID = :id');
@@ -142,13 +142,13 @@ if($msg) {
             break;
 
         case 'SendPassword':
-            $kb[] = array(
+            $kbbb[] = array(
                 array(
-                    "text" => "\xf0\x9f\x94\x99 Indietro",
+                    "text" => "\xf0\x9f\x94\x99 Riprova",
                     "callback_data" => "Login"
                 )
             );
-$logged[] = array(array("text" => "Vai al pannello", "callback_data" => "Panel"));
+            $logged[] = array(array("text" => "Vai al pannello", "callback_data" => "Panel"));
             $json = sm($chatID, "<b>\xf0\x9f\xa4\x9e\xf0\x9f\x8f\xbb Provo ad effettuare il login...</b>\nAttendi.", $kb);
             setPage($userID);
             $MessageID = json_decode($json, TRUE)['result']['message_id'];
@@ -161,9 +161,11 @@ $logged[] = array(array("text" => "Vai al pannello", "callback_data" => "Panel")
                 cb_reply($cbid, '', false, $MessageID, "<b>\xf0\x9f\x91\x8c\xf0\x9f\x8f\xbb Loggato correttamente!</b>", $logged);
                 $q = $sql->prepare('UPDATE Utenti SET LoggedIn = :sc WHERE ID = :id');
                 $q->execute(array(':id' => $userID, ':sc' => 'Si'));
+                $q = $sql->prepare('UPDATE Utenti SET AuthToken = :token WHERE ID = :id');
+                $q->execute(array(':id' => $userID, ':token' => $user->authToken));
             }
             catch (Exception $e) {
-                if(strpos(" ".$e, 'Unable to login')) sm($chatID, "\xe2\x8f\xb0 <b>Sessione scaduta</b>\nLa tua sessione è scaduta, potrebbe essere per un errore nelle credenziali. Ri-effettua il login.", $kbb);
+                if(strpos(" ".$e, 'Unable to login')) cb_reply($cbid, '', false, $MessageID, "\xe2\x9d\x8c <b>Errore nelle credenziali</b>\nCi potrebbe essere un errore nelle credenziali, riprova.", $kbbb);
             }
 
             break;
@@ -172,4 +174,108 @@ $logged[] = array(array("text" => "Vai al pannello", "callback_data" => "Panel")
     }
 }
 
+if($cbdata == "Panel"){
+    if(isLogged($userID)){
+        $panel[] = array(
+            array(
+                "text" => "\xf0\x9f\x93\x85 Sommario di oggi",
+                "callback_data" => "Today"
+            )
+        );
+        $panel[] = array(
+            array(
+                "text" => "\xf0\x9f\x93\x9a Compiti",
+                "callback_data" => "Homeworks"
+            ),
+            array(
+                "text" => "\xf0\x9f\x96\x8a Voti",
+                "callback_data" => "Grades"
+            )
+        );
+        $panel[] = array(
+            array(
+                "text" => "\xf0\x9f\x98\x95 Note disciplinari",
+                "callback_data" => "Notes"
+            ),
+            array(
+                "text" => "\xf0\x9f\x93\x9d Promemoria",
+                "callback_data" => "Memos"
+            )
+        );
+        $panel[] = array(
+            array(
+                "text" => "\xe2\x9a\x99\xef\xb8\x8f Impostazioni",
+                "callback_data" => "Settings"
+            )
+        );
+        cb_reply($cbid, $cbtext, false, $cbmid, "\xf0\x9f\x93\x98 <b>Benvenuto nel pannello!</b>\nScegli cosa vuoi fare.\n\n\xe2\x84\xb9\xef\xb8\x8f <i>Hai effettuato il login, se vuoi disconnetterti clicca su \"Impostazioni\", e poi su \"Disconnettiti\".</i>", $panel);
+
+    }
+}
+
+if($cbdata == "Notes"){
+    $tastiera[] = array(
+        array(
+            "text" => "\xf0\x9f\x94\x99 Torna indietro",
+            "callback_data" => "Panel"
+        )
+    );
+    $notes = $user->noteDisciplinari();
+    $notesText = "";
+    if(count($notes) == 0){
+        $notesText .= "Non ci sono note disciplinari.";
+    }else {
+        foreach ($notes as $note) {
+            $docente = strtolower(str_replace(")", "", str_replace("(Prof. ", "", $note['docente'])));
+            $cognome = ucfirst(explode(' ', $docente)[0]);
+            $nome = strtoupper(substr(explode(' ', $docente)[1], 0, 1).".");
+            $data = explode('-', $note['datNota']);
+            $giorno = $data[2];
+            $mese = getMonth($data[1]);
+            $anno = $data[0];
+            $notesText .= "- ".$note['desNota']."\nInserita da <b>$cognome $nome</b> il <b>$giorno $mese $anno</b>.\n\n";
+        }
+        if(count($notes) == 1) $end = "nota disciplinare";
+        else $end = "note disciplinari";
+        $notesText .= "In totale, hai <b>".count($notes)."</b> ".$end.".";
+    }
+    cb_reply($cbid, $cbtext, false, $cbmid, "<b>\xf0\x9f\x98\x95 Note disciplinari</b>\n\n".$notesText, $tastiera);
+}
+
+/*if($msg == "/panel"){
+    $panel[] = array(
+        array(
+            "text" => "\xf0\x9f\x93\x85 Sommario di oggi",
+            "callback_data" => "Today"
+        )
+    );
+    $panel[] = array(
+        array(
+            "text" => "\xf0\x9f\x93\x9a Compiti",
+            "callback_data" => "Homeworks"
+        ),
+        array(
+            "text" => "\xf0\x9f\x96\x8a Voti",
+            "callback_data" => "Grades"
+        )
+    );
+    $panel[] = array(
+        array(
+            "text" => "\xf0\x9f\x98\x95 Note disciplinari",
+            "callback_data" => "Notes"
+        ),
+        array(
+            "text" => "\xf0\x9f\x93\x9d Promemoria",
+            "callback_data" => "Memos"
+        )
+    );
+    $panel[] = array(
+        array(
+            "text" => "\xe2\x9a\x99\xef\xb8\x8f Impostazioni",
+            "callback_data" => "Settings"
+        )
+    );
+    sm($chatID, "\xf0\x9f\x93\x98 <b>Benvenuto nel pannello!</b>\nScegli cosa vuoi fare.\n\n\xe2\x84\xb9\xef\xb8\x8f <i>Hai effettuato il login, se vuoi disconnetterti clicca su \"Impostazioni\", e poi su \"Disconnettiti\".</i>", $panel);
+
+}*/
 
