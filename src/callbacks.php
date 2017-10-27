@@ -204,16 +204,26 @@ if($cbdata == "Panel"){
         );
         $panel[] = array(
             array(
+                "text" => "\xf0\x9f\x91\xa4 Profilo",
+                "callback_data" => "Profile"
+            ),
+            array(
                 "text" => "\xe2\x9a\x99\xef\xb8\x8f Impostazioni",
                 "callback_data" => "Settings"
             )
         );
-        cb_reply($cbid, $cbtext, false, $cbmid, "\xf0\x9f\x93\x98 <b>Benvenuto nel pannello!</b>\nScegli cosa vuoi fare.\n\n\xe2\x84\xb9\xef\xb8\x8f <i>Hai effettuato il login, se vuoi disconnetterti clicca su \"Impostazioni\", e poi su \"Disconnettiti\".</i>", $panel);
+        cb_reply($cbid, $cbtext, false, $cbmid, "\xf0\x9f\x93\x98 <b>Benvenuto nel pannello!</b>\nScegli cosa vuoi fare.\n\n\xe2\x84\xb9\xef\xb8\x8f <i>Hai effettuato il login, se vuoi disconnetterti clicca su \"Profilo\", e poi su \"Logout\".</i>", $panel);
 
     }
 }
 
 if($cbdata == "Notes"){
+    $tastiera[] = array(
+        array(
+            "text" => "\xf0\x9f\x94\x84 Aggiorna",
+            "callback_data" => "Notes"
+        )
+    );
     $tastiera[] = array(
         array(
             "text" => "\xf0\x9f\x94\x99 Torna indietro",
@@ -233,13 +243,37 @@ if($cbdata == "Notes"){
             $giorno = $data[2];
             $mese = getMonth($data[1]);
             $anno = $data[0];
-            $notesText .= "- ".$note['desNota']."\nInserita da <b>$cognome $nome</b> il <b>$giorno $mese $anno</b>.\n\n";
+            $seen = $note['flgVisualizzata'];
+            if($seen == "S") $seen = "\xe2\x98\x91";
+            else $seen = "\xe2\x9d\x8c";
+            $notesText .= "- ".$note['desNota']."\nInserita da <b>$cognome $nome</b> il <b>$giorno $mese $anno</b>. | Visualizzata: $seen\n\n";
         }
         if(count($notes) == 1) $end = "nota disciplinare";
         else $end = "note disciplinari";
         $notesText .= "In totale, hai <b>".count($notes)."</b> ".$end.".";
     }
     cb_reply($cbid, $cbtext, false, $cbmid, "<b>\xf0\x9f\x98\x95 Note disciplinari</b>\n\n".$notesText, $tastiera);
+}
+
+if($cbdata == "Profile"){
+    $tastiera[] = array(
+        array(
+            "text" => "\xf0\x9f\x91\x8b\xf0\x9f\x8f\xbb Logout",
+            "callback_data" => "Logout"
+        )
+    );
+    $tastiera[] = array(
+        array(
+            "text" => "\xf0\x9f\x94\x99 Torna indietro",
+            "callback_data" => "Panel"
+        )
+    );
+    $idArgo = $user->prgAlunno;
+    $authToken = $user->authToken;
+    $idTelegram = $userID;
+    $codiceScuola = $user->codMin;
+    $scuola = $user->desSede;
+    cb_reply($cbid, $cbtext, false, $cbmid, "\xf0\x9f\x91\xa4 <b>Profilo</b>\n\n\xf0\x9f\x86\x94 <b>Tuo ID di Argo:</b> $idArgo\n\xf0\x9f\x94\x91 <b>Token univoco:</b> <code>$authToken</code>\n\xf0\x9f\x9a\xb9 <b>ID Telegram:</b> $idTelegram\n\n\xf0\x9f\x94\x97 <b>Codice scuola:</b> $codiceScuola\n\xf0\x9f\x94\x96 <b>Nominativo scuola:</b> $scuola", $tastiera);
 }
 
 /*if($msg == "/panel"){

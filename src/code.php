@@ -97,11 +97,15 @@ if($msg == "/start")
         );
         $panel[] = array(
             array(
+                "text" => "\xf0\x9f\x91\xa4 Profilo",
+                "callback_data" => "Profile"
+            ),
+            array(
                 "text" => "\xe2\x9a\x99\xef\xb8\x8f Impostazioni",
                 "callback_data" => "Settings"
             )
         );
-        sm($chatID, "\xf0\x9f\x93\x98 <b>Benvenuto nel pannello!</b>\nScegli cosa vuoi fare.\n\n\xe2\x84\xb9\xef\xb8\x8f <i>Hai già effettuato il login, se vuoi disconnetterti clicca su \"Impostazioni\", e poi su \"Disconnettiti\".</i>", $panel);
+        sm($chatID, "\xf0\x9f\x93\x98 <b>Benvenuto nel pannello!</b>\nScegli cosa vuoi fare.\n\n\xe2\x84\xb9\xef\xb8\x8f <i>Hai già effettuato il login, se vuoi disconnetterti clicca su \"Profilo\", e poi su \"Logout\".</i>", $panel);
     }
     else
     {
