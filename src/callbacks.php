@@ -296,8 +296,8 @@ if($cbdata == "GradesList"){
             ++$i;
             $kb[] = array(
                 array(
-                    "text" => getNumberEmoji($i)." ".$subject,
-                    "callback_data" => "Grades|".$subject
+                    "text" => " ".$subject,
+                    "callback_data" => "G|".md5($subject)
                 )
             );
         }
@@ -312,7 +312,7 @@ if($cbdata == "GradesList"){
     cb_reply($cbid, $cbtext, false, $cbmid, "\xf0\x9f\x96\x8a <b>Voti</b>\n$gradesText", $kb);
 }
 
-if(explode('|', $cbdata)[0] == "Grades"){
+if(explode('|', $cbdata)[0] == "G"){
     $tastiera[] = array(
         array(
             "text" => "\xf0\x9f\x94\x84 Aggiorna",
@@ -328,12 +328,13 @@ if(explode('|', $cbdata)[0] == "Grades"){
     $subject = explode('|', $cbdata)[1];
     $gradesRaw = $user->votiGiornalieri();
     $gradesSubject = array();
-    $gradesText = "\xf0\x9f\x96\x8a <b>Voti per la materia $subject </b>\n\n";
     foreach($gradesRaw as $grade){
-        if($grade['desMateria'] == $subject){
+        if(md5($grade['desMateria']) == $subject){
+            $subjectText = $grade['desMateria'];
             array_push($gradesSubject, $grade);
         }
     }
+    $gradesText = "\xf0\x9f\x96\x8a <b>Voti per la materia $subjectText </b>\n\n";
     $grades = array();
     foreach($gradesSubject as $gradeSubject){
         $value = $gradeSubject['codVoto'];
