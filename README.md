@@ -3,7 +3,7 @@ A simple italian Telegram bot to see your grades, homework and everything else o
 
 ## Features
 - [x] Automatic **session saving**
-- [ ] View **your grades** by the bot.
+- [x] View **your grades** by the bot.
 - [ ] View **your homeworks** by the bot.
 - [x] View your **disciplinary notes** by the bot.
 - [ ] View the **resume** of the **today's journey**.

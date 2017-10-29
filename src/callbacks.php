@@ -189,7 +189,7 @@ if($cbdata == "Panel"){
             ),
             array(
                 "text" => "\xf0\x9f\x96\x8a Voti",
-                "callback_data" => "Grades"
+                "callback_data" => "GradesList"
             )
         );
         $panel[] = array(
@@ -243,10 +243,12 @@ if($cbdata == "Notes"){
             $giorno = $data[2];
             $mese = getMonth($data[1]);
             $anno = $data[0];
+            if($giorno == 1 || $giorno == 11) $article = "l'";
+            else $article = "il ";
             $seen = $note['flgVisualizzata'];
             if($seen == "S") $seen = "\xe2\x98\x91";
             else $seen = "\xe2\x9d\x8c";
-            $notesText .= "- ".$note['desNota']."\nInserita da <b>$cognome $nome</b> il <b>$giorno $mese $anno</b>. | Visualizzata: $seen\n\n";
+            $notesText .= "- ".$note['desNota']."\nInserita da <b>$cognome $nome</b> $article<b>$giorno $mese $anno</b>. | Visualizzata: $seen\n\n";
         }
         if(count($notes) == 1) $end = "nota disciplinare";
         else $end = "note disciplinari";
@@ -274,6 +276,92 @@ if($cbdata == "Profile"){
     $codiceScuola = $user->codMin;
     $scuola = $user->desSede;
     cb_reply($cbid, $cbtext, false, $cbmid, "\xf0\x9f\x91\xa4 <b>Profilo</b>\n\n\xf0\x9f\x86\x94 <b>Tuo ID di Argo:</b> $idArgo\n\xf0\x9f\x94\x91 <b>Token univoco:</b> <code>$authToken</code>\n\xf0\x9f\x9a\xb9 <b>ID Telegram:</b> $idTelegram\n\n\xf0\x9f\x94\x97 <b>Codice scuola:</b> $codiceScuola\n\xf0\x9f\x94\x96 <b>Nominativo scuola:</b> $scuola", $tastiera);
+}
+
+if($cbdata == "GradesList"){
+    $gradesText = "";
+    $gradesRaw = $user->votiGiornalieri();
+    if(count($gradesRaw) == 0){
+        $gradesRaw .= "Per ora, non ci sono voti.";
+    }
+    else{
+        $subjectsVarious = array();
+        foreach($gradesRaw as $grade){
+            array_push($subjectsVarious, $grade['desMateria']);
+        }
+        $subjects = array_unique($subjectsVarious);
+        sort($subjects);
+        $i = 0;
+        foreach($subjects as $subject){
+            ++$i;
+            $kb[] = array(
+                array(
+                    "text" => getNumberEmoji($i)." ".$subject,
+                    "callback_data" => "Grades|".$subject
+                )
+            );
+        }
+        $gradesText .= "Scegli di quale materia vuoi vedere i voti.\n\n<i>Al momento hai ".count($gradesRaw)." voti.</i>";
+    }
+    $kb[] = array(
+        array(
+            "text" => "\xf0\x9f\x94\x99 Torna indietro",
+            "callback_data" => "Panel"
+        )
+    );
+    cb_reply($cbid, $cbtext, false, $cbmid, "\xf0\x9f\x96\x8a <b>Voti</b>\n$gradesText", $kb);
+}
+
+if(explode('|', $cbdata)[0] == "Grades"){
+    $tastiera[] = array(
+        array(
+            "text" => "\xf0\x9f\x94\x84 Aggiorna",
+            "callback_data" => $cbdata
+        )
+    );
+    $tastiera[] = array(
+        array(
+            "text" => "\xf0\x9f\x94\x99 Torna indietro",
+            "callback_data" => "GradesList"
+        )
+    );
+    $subject = explode('|', $cbdata)[1];
+    $gradesRaw = $user->votiGiornalieri();
+    $gradesSubject = array();
+    $gradesText = "\xf0\x9f\x96\x8a <b>Voti per la materia $subject </b>\n\n";
+    foreach($gradesRaw as $grade){
+        if($grade['desMateria'] == $subject){
+            array_push($gradesSubject, $grade);
+        }
+    }
+    $grades = array();
+    foreach($gradesSubject as $gradeSubject){
+        $value = $gradeSubject['codVoto'];
+        $type = $gradeSubject['codVotoPratico'];
+        array_push($grades, $gradeSubject['decValore']);
+        if($gradeSubject['decValore'] >= 6) $result = "\xf0\x9f\x94\xb9";
+        else $result = "\xf0\x9f\x94\xbb";
+        if($type == "P") $type = "pratico";
+        if($type == "S") $type = "scritto";
+        else $type = "orale";
+        $data = explode('-', $gradeSubject['datGiorno']);
+        $giorno = $data[2];
+        $mese = getMonth($data[1]);
+        $anno = $data[0];
+        if($giorno == 1 || $giorno == 11) $article = "l'";
+        else $article = "il ";
+
+        if($gradeSubject['desProva'] != "") $desc = "'".$gradeSubject['desProva']."'";
+        else $desc = "Nessuna descrizione";
+
+        $gradesText .= "- Voto $type: <b>$value</b> $result- $desc\nAssegnato $article<b>$giorno $mese $anno</b>.\n";
+    }
+    $total = array_sum($grades);
+    $media = intval($total)/count($grades);
+    if(count($grades) == 1) $word = "voto";
+    else $word = "voti";
+    $gradesText .= "\n\xf0\x9f\x94\xb9: Voto <b>sufficiente</b>\n\xf0\x9f\x94\xbb: Voto <b>insufficiente</b>\nLa tua media per questa materia è <b>$media</b>.\nIn totale, hai <b>".count($grades)."</b> $word.";
+    cb_reply($cbid, $cbtext, false, $cbmid, $gradesText, $tastiera);
 }
 
 /*if($msg == "/panel"){

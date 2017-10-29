@@ -41,6 +41,28 @@ function getMonth($month){
     if($month == 12 || $month == 12) return 'dicembre';
 }
 
+function getNumberEmoji($number){
+    if($number == 10){
+        return "\xf0\x9f\x94\x9f";
+        exit;
+    }
+    $split = str_split(strval($number));
+    $emoji = "";
+    foreach($split as $cipher){
+        if($cipher == "0") $emoji .= "\x30\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "1") $emoji .= "\x31\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "2") $emoji .= "\x32\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "3") $emoji .= "\x33\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "4") $emoji .= "\x34\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "5") $emoji .= "\x35\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "6") $emoji .= "\x36\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "7") $emoji .= "\x37\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "8") $emoji .= "\x38\xef\xb8\x8f\xe2\x83\xa3";
+        if($cipher == "9") $emoji .= "\x39\xef\xb8\x8f\xe2\x83\xa3";
+    }
+    return $emoji;
+}
+
 require_once 'argoapi.php';
 if($update){
     $kbb[] = array(
@@ -82,7 +104,7 @@ if($msg == "/start")
             ),
             array(
                 "text" => "\xf0\x9f\x96\x8a Voti",
-                "callback_data" => "Grades"
+                "callback_data" => "GradesList"
             )
         );
         $panel[] = array(
