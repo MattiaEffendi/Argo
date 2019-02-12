@@ -63,8 +63,20 @@ function getNumberEmoji($number){
     return $emoji;
 }
 
+function getPreviousMonth($currMonth, $currYear){
+  $month = strtolower(date('F', strtotime('-1 month', strtotime($currYear.'-'.$currMonth.'-01'))));
+  $year = strtolower(date('Y', strtotime('-1 month', strtotime($currYear.'-'.$currMonth.'-01'))));
+  return array("month" => $month, "year" => $year);
+}
+
+function getNextMonth($currMonth, $currYear){
+  $month = strtolower(date('F', strtotime('+1 month', strtotime($currYear.'-'.$currMonth.'-01'))));
+  $year = strtolower(date('Y', strtotime('+1 month', strtotime($currYear.'-'.$currMonth.'-01'))));
+  return array("month" => $month, "year" => $year);
+}
+
 require_once 'argoapi.php';
-if($update){
+if($msg || $cbdata){
     $kbb[] = array(
         array(
             "text" => "\xf0\x9f\x94\x90 Effettua il login",
@@ -87,6 +99,7 @@ if($update){
     }
 }
 
+if($msg == "/xd") sm($chatID, "xd");
 
 if($msg == "/start")
 {
