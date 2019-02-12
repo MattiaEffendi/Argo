@@ -99,7 +99,6 @@ if($msg || $cbdata){
     }
 }
 
-if($msg == "/xd") sm($chatID, "xd");
 
 if($msg == "/start")
 {

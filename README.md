@@ -6,7 +6,7 @@ A simple italian Telegram bot to see your grades, homework and everything else o
 - [x] View **your grades** by the bot.
 - [ ] View **your homeworks** by the bot.
 - [x] View your **disciplinary notes** by the bot.
-- [ ] View the **resume** of the **today's journey**.
+- [x] View the **resume** of the **today's journey**.
 - [ ] Get a notify if there's an **upcoming test** or everything else.
 
 ## Installation
